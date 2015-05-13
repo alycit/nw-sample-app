@@ -114,7 +114,7 @@ angular.module('myApp.services', ['myApp.config'])
     };
 
     self.create = function(payee, date, amount) {
-        return DB.query('INSERT INTO transactions VALUES (NULL, ?, ?, ?)', [date, payee, amount])
+        return DB.query('INSERT INTO transactions (id, date, payee, amount) VALUES (NULL, ?, ?, ?)', [date, payee, amount])
             .then(function(result) {
                 console.log(result);
             });

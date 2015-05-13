@@ -1,3 +1,21 @@
-p {
-  color: #ff0000;
+.content.container {
+  margin-top: 75px;
+}
+
+.subhead {
+  margin-bottom: 25px;
+}
+
+#transactionFormWrapper {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 15px;
+}
+
+.form-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: #959595;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
