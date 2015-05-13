@@ -5,18 +5,18 @@ angular.module('myApp', ['myApp.services', 'myApp.controllers'])
 
 angular.module('myApp.config', [])
     .constant('DB_CONFIG', {
-        name: 'checkingRegister',
+        name: 'checkRegister',
         tables: [{
             name: 'transactions',
             columns: [{
                 name: 'id',
                 type: 'INTEGER PRIMARY KEY AUTOINCREMENT'
+            },  {
+                name: 'date',
+                type: 'DATETIME NOT NULL'
             }, {
                 name: 'payee',
                 type: 'TEXT NOT NULL'
-            }, {
-                name: 'date',
-                type: 'DATETIME NOT NULL'
             }, {
                 name: 'amount',
                 type: 'DOUBLE NOT NULL'
@@ -114,7 +114,7 @@ angular.module('myApp.services', ['myApp.config'])
     };
 
     self.create = function(payee, date, amount) {
-        return DB.query('INSERT INTO transactions VALUES (NULL, ?, ?, ?)', [payee, date, amount])
+        return DB.query('INSERT INTO transactions VALUES (NULL, ?, ?, ?)', [date, payee, amount])
             .then(function(result) {
                 console.log(result);
             });
