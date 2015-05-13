@@ -6,7 +6,7 @@ This is a reference app for a Desktop App built with
 - Angular JS
 - WebSQL
 
-### Getting Started
+## Getting Started
 
 1. Install [node-webkit](https://github.com/nwjs/nw.js/) using npm (now nw.js)
 2. Install [node-webkit-builder](https://github.com/mllrsohn/node-webkit-builder) using npm
