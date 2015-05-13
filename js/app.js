@@ -5,25 +5,39 @@ angular.module('myApp', ['myApp.services', 'myApp.controllers'])
 
 angular.module('myApp.config', [])
     .constant('DB_CONFIG', {
-        name: 'alyssa_funky_db',
+        name: 'checkingRegister',
         tables: [{
-            name: 'foo',
+            name: 'transactions',
             columns: [{
                 name: 'id',
-                type: 'integer primary key autoincrement'
+                type: 'INTEGER PRIMARY KEY AUTOINCREMENT'
             }, {
-                name: 'text'
+                name: 'payee',
+                type: 'TEXT NOT NULL'
+            }, {
+                name: 'date',
+                type: 'DATETIME NOT NULL'
+            }, {
+                name: 'amount',
+                type: 'DOUBLE NOT NULL'
             }]
         }]
     });
 
 angular.module('myApp.controllers', ['myApp.services'])
-    .controller('ItemCtrl', function($scope, Foo) {
-        $scope.items = [];
-        $scope.item = null;
+    .controller('RegisterCtrl', function(Transaction) {
+        self = this;
+        self.transactions = [];
+        self.newTransaction = {};
 
-        Foo.all().then(function(items) {
-            $scope.items = items;
+        self.addTransaction = function() {
+          self.transactions.push(self.newTransaction);
+          Transaction.create(self.newTransaction.date, self.newTransaction.payee, self.newTransaction.amount);
+          self.newTransaction = {};
+        };
+
+        Transaction.all().then(function(transactions) {
+            self.transactions = transactions;
         });
 
     });
@@ -35,7 +49,7 @@ angular.module('myApp.services', ['myApp.config'])
     self.db = null;
 
     self.init = function() {
-        self.db = window.openDatabase(DB_CONFIG.name, '1.0', 'my first database', 2 * 1024 * 1024);
+        self.db = window.openDatabase(DB_CONFIG.name, '1.0', 'db for bank register', 2 * 1024 * 1024);
 
         angular.forEach(DB_CONFIG.tables, function(table) {
             var columns = [];
@@ -82,25 +96,25 @@ angular.module('myApp.services', ['myApp.config'])
     return self;
 })
 
-.factory('Foo', function(DB) {
+.factory('Transaction', function(DB) {
     var self = this;
 
     self.all = function() {
-        return DB.query('SELECT * FROM foo')
+        return DB.query('SELECT * FROM transactions')
             .then(function(result) {
                 return DB.fetchAll(result);
             });
     };
 
     self.getById = function(id) {
-        return DB.query('SELECT * FROM foo WHERE id = ?', [id])
+        return DB.query('SELECT * FROM transactions WHERE id = ?', [id])
             .then(function(result) {
                 return DB.fetch(result);
             });
     };
 
-    self.create = function(id, text) {
-        return DB.query('INSERT INTO foo VALUES (NULL, ?, ?)', [id, text])
+    self.create = function(payee, date, amount) {
+        return DB.query('INSERT INTO transactions VALUES (NULL, ?, ?, ?)', [payee, date, amount])
             .then(function(result) {
                 console.log(result);
             });

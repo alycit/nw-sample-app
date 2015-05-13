@@ -3,19 +3,29 @@
   <title>This thingy</title>
   <link rel="stylesheet" type="text/css" href="css/app.css">
 </head>
-<body ng-controller="ItemCtrl">
+<body ng-controller="RegisterCtrl as registerCtrl">
   <h1>Alyssa's App</h1>
 
-  <ul>
-    <li ng-repeat="singleItem in items">
-      {{singleItem.text}}
-    </li>
-  </ul>
+  <table ng-show="registerCtrl.transactions.length">
+    <tr>
+      <td>Date</td>
+      <td>Payee</td>
+      <td>Amount</td>
+    </tr>
+    <tr ng-repeat="transaction in registerCtrl.transactions">
+      <td>{{transaction.date}}</td>
+      <td>{{transaction.payee}}</td>
+      <td>{{transaction.amount}}</td>
+    </tr>
+  </table>
 
-  <form name="itemForm">
-    <input ng-model="item.text" type="text">
+  <form name="transactionForm" ng-submit="registerCtrl.addTransaction()">
+    <input ng-model="registerCtrl.newTransaction.date" type="text">
+    <input ng-model="registerCtrl.newTransaction.payee" type="text">
+    <input ng-model="registerCtrl.newTransaction.amount" type="text">
     <input type="submit" value="Create">
   </form>
+
   <script src="vendor/angular/angular.js"></script>
   <script src="js/app.js"></script>
 </body>
