@@ -17,5 +17,5 @@ This is a reference app for a Desktop App built with
 2. The app can be refresed without killing and rerunning
 
 ### To package as an app
-1. run `nwbuild -p osx64 -v 0.12.1`.  
+1. run `nwbuild -p osx64 -v 0.12.1 .`  
 2. the resulting app will be in the build folder 
