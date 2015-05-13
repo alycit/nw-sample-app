@@ -27,7 +27,7 @@
         <td>Amount</td>
       </tr>
       <tr ng-repeat="transaction in registerCtrl.transactions">
-        <td>{{transaction.date | date }}</td>
+        <td>{{transaction.date | date:'MM/dd/yyyy' }}</td>
         <td>{{transaction.payee}}</td>
         <td>{{transaction.amount | currency}}</td>
       </tr>

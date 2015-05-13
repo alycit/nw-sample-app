@@ -5,7 +5,7 @@ angular.module('myApp', ['myApp.services', 'myApp.controllers'])
 
 angular.module('myApp.config', [])
     .constant('DB_CONFIG', {
-        name: 'checkRegister',
+        name: 'moneyBudgetDBa',
         tables: [{
             name: 'transactions',
             columns: [{
@@ -13,7 +13,7 @@ angular.module('myApp.config', [])
                 type: 'INTEGER PRIMARY KEY AUTOINCREMENT'
             },  {
                 name: 'date',
-                type: 'DATETIME NOT NULL'
+                type: 'date NOT NULL'
             }, {
                 name: 'payee',
                 type: 'TEXT NOT NULL'
@@ -32,7 +32,7 @@ angular.module('myApp.controllers', ['myApp.services'])
 
         self.addTransaction = function() {
           self.transactions.push(self.newTransaction);
-          Transaction.create(self.newTransaction.date, self.newTransaction.payee, self.newTransaction.amount);
+          Transaction.create(Date.parse(self.newTransaction.date), self.newTransaction.payee, self.newTransaction.amount);
           self.newTransaction = {};
         };
 
@@ -85,7 +85,7 @@ angular.module('myApp.services', ['myApp.config'])
         for (var i = 0; i < result.rows.length; i++) {
             output.push(result.rows.item(i));
         }
-
+        console.log(output);
         return output;
     };
 
@@ -100,7 +100,7 @@ angular.module('myApp.services', ['myApp.config'])
     var self = this;
 
     self.all = function() {
-        return DB.query('SELECT * FROM transactions')
+        return DB.query('SELECT * FROM transactions order by date asc')
             .then(function(result) {
                 return DB.fetchAll(result);
             });
@@ -113,7 +113,7 @@ angular.module('myApp.services', ['myApp.config'])
             });
     };
 
-    self.create = function(payee, date, amount) {
+    self.create = function(date, payee, amount) {
         return DB.query('INSERT INTO transactions (id, date, payee, amount) VALUES (NULL, ?, ?, ?)', [date, payee, amount])
             .then(function(result) {
                 console.log(result);
