@@ -2,6 +2,7 @@
 <head>
   <title>This thingy</title>
   <link rel="stylesheet" type="text/css" href="node_modules/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="node_modules/font-awesome/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="css/app.css">
 </head>
 <body ng-controller="RegisterCtrl as registerCtrl">
@@ -32,8 +33,8 @@
         <td>{{transaction.date | date:'MM/dd/yyyy' }}</td>
         <td>{{transaction.payee}}</td>
         <td>{{transaction.amount | currency}}</td>
-        <td ng-click="registerCtrl.setTransaction($index)">&#x270D;</td>
-        <td ng-click="registerCtrl.deleteTransaction($index)">&#x2A37;</td>
+        <td ng-click="registerCtrl.setTransaction($index)"><i class="fa fa-edit"></i></td>
+        <td ng-click="registerCtrl.deleteTransaction($index)"><i class="fa fa-trash"></i></td>
       </tr>
     </table>
     <div class="formWrapper">
