@@ -28,13 +28,30 @@ angular.module('myApp.controllers', ['myApp.services'])
     .controller('RegisterCtrl', function(Transaction) {
         self = this;
         self.transactions = [];
-        self.newTransaction = {};
+        self.transaction = {};
 
-        self.addTransaction = function() {
-          self.transactions.push(self.newTransaction);
-          Transaction.create(Date.parse(self.newTransaction.date), self.newTransaction.payee, self.newTransaction.amount);
-          self.newTransaction = {};
+        self.setTransaction = function(index){
+            var currentTx = self.transactions[index];
+            self.transaction.id = currentTx.id;
+            self.transaction.date = new Date(currentTx.date);
+            self.transaction.payee = currentTx.payee;
+            self.transaction.amount = currentTx.amount;
+        }
+
+        self.createOrUpdateTransaction = function() {
+          if(self.transaction.id) {
+            var indexToUpdate = _.findIndex(self.transactions, {id: self.transaction.id});
+            self.transactions[indexToUpdate] = self.transaction;
+            Transaction.update({id: self.transaction.id, date: Date.parse(self.transaction.date), payee: self.transaction.payee, amount: self.transaction.amount}, function() { self.transaction = {}; } );
+          } else {
+            self.transactions.push(self.transaction);
+            Transaction.create(Date.parse(self.transaction.date), self.transaction.payee, self.transaction.amount, function() { self.transaction = {}; } );
+          }
         };
+
+        self.deleteTransaction = function(index) {
+            Transaction.delete(self.transactions[index].id, function(){self.transactions.splice(index, 1) });
+        }
 
         Transaction.all().then(function(transactions) {
             self.transactions = transactions;
@@ -67,7 +84,6 @@ angular.module('myApp.services', ['myApp.config'])
     self.query = function(query, bindings) {
         bindings = typeof bindings !== 'undefined' ? bindings : [];
         var deferred = $q.defer();
-
         self.db.transaction(function(transaction) {
             transaction.executeSql(query, bindings, function(transaction, result) {
                 deferred.resolve(result);
@@ -85,7 +101,6 @@ angular.module('myApp.services', ['myApp.config'])
         for (var i = 0; i < result.rows.length; i++) {
             output.push(result.rows.item(i));
         }
-        console.log(output);
         return output;
     };
 
@@ -113,11 +128,18 @@ angular.module('myApp.services', ['myApp.config'])
             });
     };
 
-    self.create = function(date, payee, amount) {
+    self.create = function(date, payee, amount, callback) {
         return DB.query('INSERT INTO transactions (id, date, payee, amount) VALUES (NULL, ?, ?, ?)', [date, payee, amount])
-            .then(function(result) {
-                console.log(result);
-            });
+            .then(callback);
+    }
+
+    self.update = function(transaction, callback) {
+        return DB.query("UPDATE transactions set date = ?, payee = ?, amount = ? WHERE id = ?", [transaction.date, transaction.payee, transaction.amount, transaction.id])
+            .then(callback);
+    }
+    self.delete = function(id, callback) {
+        return DB.query('DELETE FROM transactions WHERE id=?', [id])
+            .then(callback);
     }
 
     return self;

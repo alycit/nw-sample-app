@@ -25,33 +25,40 @@
         <td>Date</td>
         <td>Payee</td>
         <td>Amount</td>
+        <td>Edit</td>
+        <td>Delete</td>
       </tr>
       <tr ng-repeat="transaction in registerCtrl.transactions">
         <td>{{transaction.date | date:'MM/dd/yyyy' }}</td>
         <td>{{transaction.payee}}</td>
         <td>{{transaction.amount | currency}}</td>
+        <td ng-click="registerCtrl.setTransaction($index)">&#x270D;</td>
+        <td ng-click="registerCtrl.deleteTransaction($index)">&#x2A37;</td>
       </tr>
     </table>
-    <div id="transactionFormWrapper">
-      <p class="form-title">Enter a transaction</p>
-      <form name="transactionForm" id="transactionForm" ng-submit="registerCtrl.addTransaction()">
+    <div class="formWrapper">
+      <p class="form-title">Transaction</p>
+      <form name="transactionForm" id="transactionForm" ng-submit="registerCtrl.createOrUpdateTransaction()">
         <div class="form-group">
           <label for="date">Date</label>
-          <input ng-model="registerCtrl.newTransaction.date" type="date" class="form-control" id="date" placeholder="2014-02-12">
+
+          <input ng-model="registerCtrl.transaction.date" type="date" class="form-control" id="date" placeholder="2014-02-12">
         </div>
         <div class="form-group">
           <label for="payee">Payee</label>
-          <input ng-model="registerCtrl.newTransaction.payee" type="text" class="form-control" id="payee" placeholder="Walgreens">
+          <input ng-model="registerCtrl.transaction.payee" type="text" class="form-control" id="payee" placeholder="Walgreens">
         </div>
         <div class="form-group">
           <label for="amount">Amount</label>
-          <input ng-model="registerCtrl.newTransaction.amount" type="text" class="form-control" id="amount" placeholder="5.55">
+          <input ng-model="registerCtrl.transaction.amount" type="text" class="form-control" id="amount" placeholder="5.55">
         </div>
+        <input ng-model="registerCtrl.transaction.id" type="hidden" id="id">
         <button type="submit" class="btn btn-default">Enter</button>
       </form>
-      </div>
+    </div>
   </div>
   <script src="node_modules/angular/angular.js"></script>
+  <script src="node_modules/underscore/underscore.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
